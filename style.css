@@ -1,0 +1,758 @@
+here/* ==========================================================================
+   ❤️ POUR TRINIX ❤️ — LUXURY DESIGN SYSTEM
+   Performance-Optimized & Production-Ready
+   ========================================================================== */
+
+:root {
+    /* Color Palette - Deep Velvet & Rose Gold */
+    --night-deep: #0f071d;
+    --night-rich: #17082c;
+    --night-soft: #241242;
+    --purple-royal: #7a5aa8;
+    --rose-gold: #e6a9a1;
+    --rose-gold-light: #f4c9c0;
+    --gold-premium: #e3c574;
+    --gold-glow: #f6e6b4;
+    --pink-blush: #f7c6e0;
+    
+    /* UI Elements */
+    --white-pure: #ffffff;
+    --ink-classic: #fdf5ff;
+    --ink-muted: rgba(253, 245, 255, 0.7);
+    
+    /* Luxury Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: rgba(0, 0, 0, 0.4);
+    --inner-glow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    
+    /* Animation Curves */
+    --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-smooth: 0.4s var(--ease-lux);
+}
+
+/* ==========================================================================
+   BASE STYLES & RESET
+   ========================================================================== */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+    height: 100%;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background-color: var(--night-deep);
+    background-image: 
+        radial-gradient(circle at 50% 0%, #3a1c5e 0%, transparent 50%),
+        radial-gradient(circle at 50% 100%, #1a0b2e 0%, transparent 50%),
+        linear-gradient(180deg, var(--night-rich) 0%, var(--night-deep) 100%);
+    color: var(--ink-classic);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+}
+
+/* Animated Star Background (GPU Optimized) */
+body::before {
+    content: "";
+    position: fixed;
+    inset: -100px; /* Overscan for smooth motion */
+    z-index: -1;
+    pointer-events: none;
+    background-image: 
+        radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 40px 70px, var(--gold-glow), rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 40px, var(--pink-blush), rgba(0,0,0,0));
+    background-size: 200px 200px;
+    animation: starsShift 120s linear infinite;
+    opacity: 0.6;
+    will-change: transform;
+}
+
+@keyframes starsShift {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-100px, -100px, 0); }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--gold-premium);
+    color: var(--night-deep);
+    padding: 10px;
+    z-index: 1000;
+}
+
+.skip-link:focus { top: 0; }
+
+/* ==========================================================================
+   SHARED UI COMPONENTS
+   ========================================================================== */
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: var(--transition-smooth);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+    outline: 2px solid var(--gold-glow);
+    outline-offset: 4px;
+}
+
+.glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: var(--inner-glow), 0 24px 48px var(--glass-shadow);
+    border-radius: 24px;
+}
+
+/* ==========================================================================
+   CANVAS & EFFECTS LAYERS
+   ========================================================================== */
+
+#sky-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#fx-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+    contain: strict;
+}
+
+/* Common Particle styles */
+.fx-heart, .fx-petal, .fx-butterfly, .fx-spark {
+    position: absolute;
+    will-change: transform, opacity;
+}
+
+.fx-heart { color: var(--rose-gold-light); filter: drop-shadow(0 0 8px rgba(230,169,161,0.6)); }
+.fx-petal { color: var(--pink-blush); opacity: 0.8; }
+.fx-spark { 
+    width: 4px; height: 4px; 
+    border-radius: 50%; 
+    background: var(--gold-glow); 
+    box-shadow: 0 0 10px 2px var(--gold-premium); 
+}
+
+/* ==========================================================================
+   SCENE MANAGEMENT
+   ========================================================================== */
+
+#app {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+}
+
+.scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    contain: content;
+    padding: calc(2rem + env(safe-area-inset-top)) 1.5rem calc(2rem + env(safe-area-inset-bottom));
+    transition: opacity 0.8s var(--ease-lux), visibility 0s linear 0.8s;
+}
+
+.scene.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.8s var(--ease-lux), visibility 0s linear 0s;
+}
+
+/* ==========================================================================
+   LOADER SCENE
+   ========================================================================== */
+
+.loader-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.loader-heart {
+    width: 64px;
+    height: 58px;
+    animation: heartbeat 1.4s var(--ease-lux) infinite;
+    will-change: transform;
+}
+
+.loader-heart svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--rose-gold);
+    filter: drop-shadow(0 0 20px rgba(230,169,161,0.8));
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1) translate3d(0,0,0); }
+    25% { transform: scale(1.15) translate3d(0,0,0); }
+    40% { transform: scale(0.95) translate3d(0,0,0); }
+}
+
+.loader-label {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+}
+
+.loader-bar {
+    width: min(70vw, 280px);
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.loader-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--rose-gold), var(--gold-premium));
+    transition: width 0.3s ease-out;
+}
+
+/* ==========================================================================
+   CHARACTER (ILARA)
+   ========================================================================== */
+
+.character-slot {
+    width: 100%;
+    max-width: 380px;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 0;
+}
+
+.ilara {
+    width: auto;
+    height: 100%;
+    max-height: 55vh;
+    overflow: visible;
+    filter: 
+        drop-shadow(0 10px 30px rgba(0,0,0,0.3))
+        drop-shadow(0 0 40px rgba(255,180,220,0.2));
+    animation: ilara-float 6s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes ilara-float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -12px, 0); }
+}
+
+/* Subtle Character Parts */
+.ilara.is-tilt .ilara-head {
+    animation: headTilt 4s ease-in-out infinite;
+    transform-origin: 150px 200px;
+}
+
+@keyframes headTilt {
+    0%, 100% { transform: rotate(-1deg); }
+    50% { transform: rotate(2deg); }
+}
+
+.ilara-eye .eyelid {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.1s;
+}
+
+.ilara.is-blinking .ilara-eye .eyelid {
+    animation: blinkAction 5s infinite;
+}
+
+@keyframes blinkAction {
+    0%, 94%, 100% { transform: scaleY(0); }
+    97% { transform: scaleY(1); }
+}
+
+/* Mouth/Talking */
+.ilara.is-talking .ilara-mouth {
+    animation: talkMotion 0.4s infinite;
+    transform-origin: center;
+}
+
+@keyframes talkMotion {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.4) translate3d(0, 2px, 0); }
+}
+
+/* Arm/Pose Management */
+.ilara-arms .pose { display: none; }
+.ilara.pose-envelope .pose-envelope,
+.ilara.pose-present .pose-present,
+.ilara.pose-clap .pose-clap,
+.ilara.pose-rose .pose-rose,
+.ilara.pose-wave .pose-wave { display: block; }
+
+.ilara-waving-arm {
+    transform-origin: 182px 268px;
+    animation: waveAction 1.2s ease-in-out infinite;
+}
+
+@keyframes waveAction {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-20deg); }
+}
+
+/* ==========================================================================
+   DIALOGUE SYSTEM
+   ========================================================================== */
+
+.opening-stage, .present-stage, .unlock-stage, .ending-stage {
+    width: 100%;
+    max-width: 540px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dialogue-box {
+    width: 100%;
+    padding: 1.75rem 2rem;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dialogue-text {
+    font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--ink-classic);
+    margin: 0;
+    text-align: left;
+}
+
+.dialogue-text .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--gold-premium);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: cursorFade 0.8s step-end infinite;
+}
+
+@keyframes cursorFade { 50% { opacity: 0; } }
+
+.tap-hint {
+    align-self: flex-end;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 99px;
+    border: 1px solid var(--glass-border);
+    color: var(--gold-glow);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    transform: translate3d(0, 5px, 0);
+    transition: all 0.5s var(--ease-lux);
+}
+
+.tap-hint.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    animation: hintFloat 2s ease-in-out infinite;
+}
+
+@keyframes hintFloat {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(5px, 0, 0); }
+}
+
+/* ==========================================================================
+   PASSWORD SCENE
+   ========================================================================== */
+
+.password-stage {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.password-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--ink-classic);
+    margin: 0;
+}
+
+.password-dots {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid var(--rose-gold);
+    transition: all 0.3s var(--ease-lux);
+}
+
+.dot.filled {
+    background: var(--gold-premium);
+    border-color: var(--gold-glow);
+    box-shadow: 0 0 15px var(--gold-premium);
+    transform: scale(1.2);
+}
+
+.password-dots.shake {
+    animation: errorShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes errorShake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 72px);
+    gap: 1rem;
+    justify-content: center;
+}
+
+.key {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--ink-classic);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s var(--ease-lux);
+}
+
+.key:active {
+    background: rgba(227, 197, 116, 0.2);
+    transform: scale(0.9);
+    border-color: var(--gold-premium);
+}
+
+.key-del { color: var(--rose-gold); }
+
+/* ==========================================================================
+   ENVELOPE SCENE
+   ========================================================================== */
+
+.envelope-stage {
+    perspective: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+.envelope {
+    position: relative;
+    width: min(80vw, 360px);
+    height: min(55vw, 240px);
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.8s var(--ease-lux);
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(155deg, #7a3f68, #4a1f42);
+    border-radius: 12px;
+    box-shadow: 0 40px 80px var(--glass-shadow);
+}
+
+.envelope-letter-peek {
+    position: absolute;
+    inset: 5% 8%;
+    background: #fffcf8;
+    border-radius: 4px;
+    transform: translate3d(0, 90%, 0);
+    transition: transform 1.2s var(--ease-lux);
+    z-index: 1;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+}
+
+.envelope-front-left, .envelope-front-right {
+    position: absolute;
+    bottom: 0;
+    width: 50.5%;
+    height: 100%;
+    background: #6a2b56;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.envelope-front-left { left: 0; clip-path: polygon(0 0, 100% 50%, 0 100%); border-radius: 0 0 0 12px; }
+.envelope-front-right { right: 0; clip-path: polygon(100% 0, 0 50%, 100% 100%); border-radius: 0 0 12px 0; }
+
+.envelope-flap {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60%;
+    background: #8e3e70;
+    clip-path: polygon(0 0, 100% 0, 50% 95%);
+    transform-origin: top;
+    z-index: 4;
+    transition: transform 0.8s var(--ease-lux);
+    border-radius: 12px 12px 0 0;
+}
+
+.envelope-seal {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 44px; height: 44px;
+    transform: translate3d(-50%, -40%, 0);
+    z-index: 5;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    transition: all 0.4s var(--ease-lux);
+}
+
+.envelope-seal svg { fill: var(--gold-premium); }
+
+.envelope.is-open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
+.envelope.is-open .envelope-letter-peek { transform: translate3d(0, -60%, 0); }
+.envelope.is-open .envelope-seal { opacity: 0; transform: translate3d(-50%, -40%, 0) scale(0.5); }
+
+/* ==========================================================================
+   LETTER SCENE
+   ========================================================================== */
+
+.letter-stage {
+    width: 100%;
+    height: 100%;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.paper {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    background: #fffcf8;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        linear-gradient(to bottom, #fffcf8 0%, #f4eee1 100%);
+    padding: clamp(2rem, 8vw, 4rem) clamp(1.5rem, 6vw, 3rem);
+    border-radius: 4px;
+    box-shadow: 
+        0 1px 1px rgba(0,0,0,0.1), 
+        0 10px 40px rgba(0,0,0,0.4),
+        0 20px 80px rgba(0,0,0,0.3);
+    color: #3d2a3a;
+    animation: paperEnter 1.2s var(--ease-lux);
+    transform-origin: center bottom;
+}
+
+@keyframes paperEnter {
+    from { opacity: 0; transform: translate3d(0, 50px, 0) scale(0.9); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.paper-greeting {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    color: #a1497f;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.paper-body {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    line-height: 1.6;
+    min-height: 200px;
+}
+
+.continue-btn {
+    margin-top: 3rem;
+    padding: 1.2rem 2.5rem;
+    background: linear-gradient(135deg, var(--rose-gold), var(--gold-premium));
+    color: #4a1f42;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 99px;
+    box-shadow: 0 15px 35px rgba(230, 169, 161, 0.4);
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    transition: all 0.6s var(--ease-lux);
+}
+
+.continue-btn.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+/* ==========================================================================
+   SECRET HEART SCENE
+   ========================================================================== */
+
+.secret-heart {
+    position: relative;
+    width: 200px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 20px var(--rose-gold));
+}
+
+.secret-heart-svg {
+    position: absolute;
+    inset: 0;
+    fill: var(--rose-gold-light);
+    animation: pulseSecret 2s ease-in-out infinite;
+}
+
+@keyframes pulseSecret {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--rose-gold)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--gold-premium)); }
+}
+
+.secret-heart-names {
+    position: relative;
+    z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #4a1f42;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   ENDING & FOOTER
+   ========================================================================== */
+
+.ending-title {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.ending-title-main {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+    color: var(--gold-glow);
+    text-shadow: 0 0 20px rgba(227, 197, 116, 0.5);
+    margin: 0;
+}
+
+.ending-title-sub {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.6rem;
+    color: var(--rose-gold-light);
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   MUTE BUTTON
+   ========================================================================== */
+
+.mute-btn {
+    position: fixed;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    right: calc(1.5rem + env(safe-area-inset-right));
+    z-index: 100;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.4s var(--ease-lux);
+}
+
+.mute-btn.is-visible { opacity: 1; transform: scale(1); }
+.mute-btn:hover { background: rgba(255,255,255,0.1); }
+
+/* ==========================================================================
+   RESPONSIVE OVERRIDES
+   ========================================================================== */
+
+@media (min-width: 768px) {
+    .dialogue-box { padding: 2.5rem 3rem; }
+    .keypad { grid-template-columns: repeat(3, 80px); gap: 1.5rem; }
+    .key { width: 80px; height: 80px; }
+}
+
+@media (max-height: 600px) {
+    .ilara { max-height: 40vh; }
+    .dialogue-box { min-height: 100px; padding: 1rem 1.5rem; }
+  }
